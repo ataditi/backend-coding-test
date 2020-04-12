@@ -7,9 +7,14 @@
     "test": "tests"
   },
   "scripts": {
-    "test": "mocha tests",
-    "start": "node index.js"
+    "lint": "eslint",
+    "start": "node index.js",
+    "test": "DEBUG=true nyc mocha ./tests/**/*.test.js --exit --insepct=0.0.0.0:9229 --timeount 120000",
+    "coverage": "nyc npm run test"
   },
+  "pre-push": [
+    "test"
+  ],
   "keywords": [
     "Xendit"
   ],
@@ -18,10 +23,16 @@
   "dependencies": {
     "body-parser": "^1.19.0",
     "express": "^4.16.4",
-    "sqlite3": "^4.0.6"
+    "sqlite3": "^4.0.6",
+    "winston": "^3.2.1"
   },
   "devDependencies": {
+    "eslint": "^6.8.0",
+    "eslint-config-airbnb-base": "^14.1.0",
+    "eslint-plugin-import": "^2.20.2",
     "mocha": "^6.1.4",
+    "nyc": "^15.0.1",
+    "pre-push": "^0.1.1",
     "supertest": "^4.0.2"
   }
 }
