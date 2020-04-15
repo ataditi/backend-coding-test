@@ -1,0 +1,30 @@
+config:
+  target: "http://localhost:8010"
+  phases:
+    - duration: 5
+      arrivalRate: 10
+    - duration: 10
+      arrivalRate: 10
+      rampTo: 100
+    - duration: 30
+      arrivalRate: 100
+scenarios:
+  - name: "Create and get rides"
+    flow:
+      - post:
+          url: "/rides"
+          json: 
+            rider_name: mock_rider_name,
+            driver_name: mock_driver_name,
+            driver_vehicle: mock_driver_vehicle,
+            start_lat: 10,
+            start_long: 10,
+            end_lat: 20,
+            end_long: 20,
+          capture:
+            json: "$[0].rideID"
+            as: "createdRideID"
+      - get:
+          url: "/rides/{{ createdRideID }}"
+      - get:
+          url: "/rides"

@@ -1,4 +1,4 @@
-const defaultPageSize = 100;
+const defaultPageSize = 10;
 
 module.exports = (db) => (req, res) => {
   const prevID = req.query.prev || 0;
