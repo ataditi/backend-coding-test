@@ -10,7 +10,8 @@
     "lint": "eslint",
     "start": "node index.js",
     "test": "DEBUG=true nyc mocha ./tests/**/*.test.js --exit --insepct=0.0.0.0:9229 --timeount 120000",
-    "coverage": "nyc npm run test"
+    "coverage": "nyc npm run test",
+    "test:load": "artillery run artillery.yml"
   },
   "pre-push": [
     "test"
