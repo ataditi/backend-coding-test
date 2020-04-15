@@ -49,9 +49,9 @@ const validate = (req) => {
 };
 
 module.exports = (db) => (req, res) => {
-  const err = validate(req);
-  if (err) {
-    return res.send(err);
+  const validateErr = validate(req);
+  if (validateErr) {
+    return res.send(validateErr);
   }
   const {
     body: {
