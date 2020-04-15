@@ -8,6 +8,8 @@ const bodyParser = require('body-parser');
 
 const jsonParser = bodyParser.json();
 
+const pageSize = 100;
+
 const logger = winston.createLogger({
   transports: [
     new winston.transports.File({ filename: 'logs/logfile.log' }),
@@ -61,21 +63,21 @@ module.exports = (db) => {
     if (typeof driverName !== 'string' || driverName.length < 1) {
       return res.send({
         error_code: 'VALIDATION_ERROR',
-        message: 'Rider name must be a non empty string',
+        message: 'Driver name must be a non empty string',
       });
     }
 
     if (typeof driverVehicle !== 'string' || driverVehicle.length < 1) {
       return res.send({
         error_code: 'VALIDATION_ERROR',
-        message: 'Rider name must be a non empty string',
+        message: 'Driver vehicle must be a non empty string',
       });
     }
 
 
     const values = [startLat, startLong, endLat, endLong, riderName, driverName, driverVehicle];
 
-    return db.run('INSERT INTO Rides(startLat, startLong, endLat, endLong, riderName, driverName, driverVehicle) VALUES (?, ?, ?, ?, ?, ?, ?)', values, (err) => {
+    return db.run('INSERT INTO Rides(startLat, startLong, endLat, endLong, riderName, driverName, driverVehicle) VALUES (?, ?, ?, ?, ?, ?, ?)', values, function cb(err) {
       if (err) {
         return res.send({
           error_code: 'SERVER_ERROR',
@@ -90,21 +92,21 @@ module.exports = (db) => {
             message: 'Unknown error',
           });
         }
-
         return res.send(rows);
       });
     });
   });
 
   app.get('/rides', (req, res) => {
-    db.all('SELECT * FROM Rides', (err, rows) => {
+    const prevID = req.query.prev || 0;
+    const values = [prevID, pageSize];
+    db.all('SELECT * FROM Rides where rideID > ? limit ?', values, (err, rows) => {
       if (err) {
         return res.send({
           error_code: 'SERVER_ERROR',
           message: 'Unknown error',
         });
       }
-
       if (rows.length === 0) {
         return res.send({
           error_code: 'RIDES_NOT_FOUND_ERROR',
@@ -117,7 +119,7 @@ module.exports = (db) => {
   });
 
   app.get('/rides/:id', (req, res) => {
-    db.all(`SELECT * FROM Rides WHERE rideID='${req.params.id}'`, (err, rows) => {
+    db.all('SELECT * FROM Rides WHERE rideID= ?', req.params.id, (err, rows) => {
       if (err) {
         return res.send({
           error_code: 'SERVER_ERROR',
