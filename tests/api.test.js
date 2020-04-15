@@ -40,7 +40,7 @@ describe('API tests', () => {
           const firstRideID = res.body.reduce(reducer, Number.MAX_SAFE_INTEGER);
           res.body = { length: res.body.length, firstRideID };
         })
-        .expect(200, { length: 100, firstRideID: 103 }, done);
+        .expect(200, { length: 10, firstRideID: 103 }, done);
     });
     it('should get rides without prevID', (done) => {
       request(app)
@@ -51,7 +51,7 @@ describe('API tests', () => {
           const firstRideID = res.body ? res.body.reduce(reducer, Number.MAX_SAFE_INTEGER) : -1;
           res.body = { length: res.body.length, firstRideID };
         })
-        .expect(200, { length: 100, firstRideID: 1 }, done);
+        .expect(200, { length: 10, firstRideID: 1 }, done);
     });
     it('should return empty array for ID which  does not exist in DB', (done) => {
       request(app)
