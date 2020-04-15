@@ -1,5 +1,5 @@
 
-module.exports = (db) => {
+module.exports.buildSchemas = (db) => {
   const createRideTableSchema = `
         CREATE TABLE Rides
         (
@@ -18,4 +18,10 @@ module.exports = (db) => {
   db.run(createRideTableSchema);
 
   return db;
+};
+
+module.exports.insertMockRides = (db) => {
+  for (let i = 0; i < 1000; i += 1) {
+    db.run('INSERT INTO Rides(startLat, startLong, endLat, endLong, riderName, driverName, driverVehicle) VALUES (?, ?, ?, ?, ?, ?, ?)', [10, 10, 10, 10, 'test-rider', 'test-driver', 'test-vehicle']);
+  }
 };
